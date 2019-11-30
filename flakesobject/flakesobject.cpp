@@ -32,7 +32,6 @@
 #include "renderer/api/project.h"
 #include "renderer/api/rendering.h"
 #include "renderer/api/scene.h"
-#include "renderer/api/types.h"
 #include "renderer/api/utility.h"
 
 // todo: fix.
@@ -68,6 +67,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <memory>
 #include <unordered_set>
@@ -178,8 +178,8 @@ namespace
 
             // Print octree statistics.
             const size_t node_count = m_octree->get_node_count();
-            const asf::uint64 solid_leaf_count = static_cast<asf::uint64>(m_octree->count_solid_leaves());
-            const asf::uint64 total_flake_count = static_cast<asf::uint64>(solid_leaf_count * m_flakes_per_voxel);
+            const std::uint64_t solid_leaf_count = static_cast<std::uint64_t>(m_octree->count_solid_leaves());
+            const std::uint64_t total_flake_count = static_cast<std::uint64_t>(solid_leaf_count * m_flakes_per_voxel);
             RENDERER_LOG_DEBUG("flakes: statistics:");
             RENDERER_LOG_DEBUG("  node count                    %s", asf::pretty_uint(node_count).c_str());
             RENDERER_LOG_DEBUG("  solid leaf count              %s", asf::pretty_uint(solid_leaf_count).c_str());
@@ -434,7 +434,7 @@ namespace
                 // The maximum size of a single octree is 2^30 = 1,073,741,824 nodes.
                 //
 
-                asf::uint32     m_info;
+                std::uint32_t   m_info;
             };
 
             const asr::GAABB3   m_root_aabb;
@@ -869,7 +869,7 @@ namespace
                 const asf::Vector3d flake_center_delta = leaf_extent * m_flake_center_jitter;
 
                 // Initialize RNG for this voxel.
-                const asf::uint32 voxel_seed = asf::hash_uint64_to_uint32(leaf_index);
+                const std::uint32_t voxel_seed = asf::hash_uint64_to_uint32(leaf_index);
                 asf::Xoroshiro128plus rng(voxel_seed, voxel_seed);
 
                 // Force some mixing.
@@ -1032,7 +1032,7 @@ namespace
         assert(is_interior());
         assert(index < (1UL << 30));
         m_info &= 0x80000000UL;
-        m_info |= static_cast<asf::uint32>(index);
+        m_info |= static_cast<std::uint32_t>(index);
     }
 
     inline size_t FlakesObject::Octree::Node::get_child_node_index() const
