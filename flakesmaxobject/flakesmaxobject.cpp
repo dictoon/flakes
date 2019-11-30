@@ -168,8 +168,8 @@ namespace
 
         // --- Parameters specifications ---
 
-        ParamIdBaseObject, L"base_object", TYPE_STRING, 0, IDS_BASE_OBJECT,
-            p_ui, TYPE_EDITBOX, IDC_TEXTEDIT_BASE_OBJECT,
+        ParamIdBaseObject, L"base_object", TYPE_INODE, 0, IDS_BASE_OBJECT,
+            p_ui, TYPE_PICKNODEBUTTON, IDC_BUTTON_BASE_OBJECT,
         p_end,
 
         ParamIdMode, L"mode", TYPE_INT, 0, IDS_MODE,
@@ -712,9 +712,12 @@ asf::auto_release_ptr<asr::Object> FlakesMaxObject::create_object(
 
     asr::ParamArray params;
     {
-        const MCHAR* base_object_instance_name;
-        m_pblock->GetValue(ParamIdBaseObject, time, base_object_instance_name, FOREVER);
-        params.insert("base_object_instance", base_object_instance_name != nullptr ? wide_to_utf8(base_object_instance_name) : std::string());
+        INode* base_object;
+        m_pblock->GetValue(ParamIdBaseObject, time, base_object, FOREVER);
+        params.insert("base_object_instance",
+            base_object != nullptr
+                ? wide_to_utf8(base_object->GetName()) + "_inst"
+                : std::string());
     }
     {
         int mode;
