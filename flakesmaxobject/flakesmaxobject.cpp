@@ -638,7 +638,10 @@ void FlakesMaxObject::BuildMesh(TimeValue t)
         mesh.setVert(i, Size * Point3(Vertices[i * 3 + 0], -Vertices[i * 3 + 2], Vertices[i * 3 + 1]));
 
     for (int i = 0; i < TriangleCount; ++i)
+    {
         mesh.faces[i].setVerts(Triangles[i * 3 + 0], Triangles[i * 3 + 1], Triangles[i * 3 + 2]);
+        mesh.faces[i].setEdgeVisFlags(EDGE_VIS, EDGE_VIS, EDGE_VIS);
+    }
 
     mesh.InvalidateGeomCache();
 }
