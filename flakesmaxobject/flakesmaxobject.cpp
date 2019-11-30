@@ -708,34 +708,41 @@ asf::auto_release_ptr<asr::Object> FlakesMaxObject::create_object(
         project.search_paths().push_back_explicit_path(plugin_base_path.string());
 
     asr::ParamArray params;
-
-    const MCHAR* base_object_instance_name;
-    m_pblock->GetValue(ParamIdBaseObject, time, base_object_instance_name, FOREVER);
-    params.insert("base_object_instance", base_object_instance_name != nullptr ? wide_to_utf8(base_object_instance_name) : std::string());
-
-    int mode;
-    m_pblock->GetValue(ParamIdMode, time, mode, FOREVER);
-    params.insert("mode", mode == 0 ? "flakes" : "voxelization");
-
-    float voxel_size;
-    m_pblock->GetValue(ParamIdMode, time, voxel_size, FOREVER);
-    params.insert("voxel_size", voxel_size);
-
-    float flake_size;
-    m_pblock->GetValue(ParamIdMode, time, flake_size, FOREVER);
-    params.insert("flake_size", flake_size);
-
-    float flake_size_jitter;
-    m_pblock->GetValue(ParamIdMode, time, flake_size_jitter, FOREVER);
-    params.insert("flake_size_jitter", flake_size_jitter);
-
-    float flake_center_jitter;
-    m_pblock->GetValue(ParamIdMode, time, flake_center_jitter, FOREVER);
-    params.insert("flake_center_jitter", flake_center_jitter);
-
-    float flakes_per_voxel;
-    m_pblock->GetValue(ParamIdMode, time, flakes_per_voxel, FOREVER);
-    params.insert("flakes_per_voxel", flakes_per_voxel);
+    {
+        const MCHAR* base_object_instance_name;
+        m_pblock->GetValue(ParamIdBaseObject, time, base_object_instance_name, FOREVER);
+        params.insert("base_object_instance", base_object_instance_name != nullptr ? wide_to_utf8(base_object_instance_name) : std::string());
+    }
+    {
+        int mode;
+        m_pblock->GetValue(ParamIdMode, time, mode, FOREVER);
+        params.insert("mode", mode == 0 ? "flakes" : "voxelization");
+    }
+    {
+        float voxel_size;
+        m_pblock->GetValue(ParamIdVoxelSize, time, voxel_size, FOREVER);
+        params.insert("voxel_size", voxel_size);
+    }
+    {
+        float flake_size;
+        m_pblock->GetValue(ParamIdFlakeSize, time, flake_size, FOREVER);
+        params.insert("flake_size", flake_size);
+    }
+    {
+        float flake_size_jitter;
+        m_pblock->GetValue(ParamIdFlakeSizeJitter, time, flake_size_jitter, FOREVER);
+        params.insert("flake_size_jitter", flake_size_jitter);
+    }
+    {
+        float flake_center_jitter;
+        m_pblock->GetValue(ParamIdFlakeCenterJitter, time, flake_center_jitter, FOREVER);
+        params.insert("flake_center_jitter", flake_center_jitter);
+    }
+    {
+        float flakes_per_voxel;
+        m_pblock->GetValue(ParamIdFlakesPerVoxel, time, flakes_per_voxel, FOREVER);
+        params.insert("flakes_per_voxel", flakes_per_voxel);
+    }
 
     return object_factory->create(name, params);
 }
