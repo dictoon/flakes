@@ -182,14 +182,14 @@ namespace
         p_end,
 
         ParamIdVoxelSize, L"voxel_size", TYPE_FLOAT, 0, IDS_VOXEL_SIZE,
-            p_default, 0.1f,
-            p_range, 0.0f, 1.0f,
+            p_default, 10.0f,
+            p_range, 0.0f, 1000.0f,
             p_ui, TYPE_SPINNER, EDITTYPE_FLOAT, IDC_EDIT_VOXEL_SIZE, IDC_SPINNER_VOXEL_SIZE, SPIN_AUTOSCALE,
         p_end,
 
         ParamIdFlakeSize, L"flake_size", TYPE_FLOAT, 0, IDS_FLAKE_SIZE,
-            p_default, 0.05f,
-            p_range, 0.0f, 1.0f,
+            p_default, 10.0f,
+            p_range, 0.0f, 1000.0f,
             p_ui, TYPE_SPINNER, EDITTYPE_FLOAT, IDC_EDIT_FLAKE_SIZE, IDC_SPINNER_FLAKE_SIZE, SPIN_AUTOSCALE,
         p_end,
 
@@ -207,7 +207,7 @@ namespace
 
         ParamIdFlakesPerVoxel, L"flakes_per_voxel", TYPE_FLOAT, 0, IDS_FLAKES_PER_VOXEL,
             p_default, 1.0f,
-            p_range, 0.0f, 10.0f,
+            p_range, 0.0f, 100.0f,
             p_ui, TYPE_SPINNER, EDITTYPE_FLOAT, IDC_EDIT_FLAKES_PER_VOXEL, IDC_SPINNER_FLAKES_PER_VOXEL, SPIN_AUTOSCALE,
         p_end,
 
