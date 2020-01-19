@@ -32,10 +32,8 @@
 #include "renderer/api/project.h"
 #include "renderer/api/rendering.h"
 #include "renderer/api/scene.h"
+#include "renderer/api/trace.h"
 #include "renderer/api/utility.h"
-
-// todo: fix.
-#include "renderer/kernel/shading/shadingray.h"
 
 // appleseed.foundation headers.
 #include "foundation/math/aabb.h"
@@ -299,7 +297,7 @@ namespace
         {
             obj_inst_front_point = obj_inst_ray.m_org;
             obj_inst_back_point = obj_inst_ray.m_org;
-            obj_inst_geo_normal = - obj_inst_ray.m_dir; // todo: entirely arbitrary
+            obj_inst_geo_normal = -obj_inst_ray.m_dir; // todo: entirely arbitrary
         }
 
       private:
@@ -875,8 +873,6 @@ namespace
                 // Force some mixing.
                 rng.rand_uint32();
 
-                bool found_hit = false;
-
                 // Instantiate and intersect the flake(s) contained in this voxel.
                 const size_t flake_count = asr::stochastic_cast<asf::Xoroshiro128plus, size_t, double>(rng, m_flakes_per_voxel);
                 for (size_t flake_index = 0; flake_index < flake_count; ++flake_index)
@@ -908,13 +904,12 @@ namespace
                     if (!asf::intersect(ray, flake_center, flake_normal, t_flake))
                         continue;
 
-                    // Reject this flake if it's beyond the closest intersection found so far.
-                    if (t_flake >= m_result.m_distance)
+                    // Reject this flake if the intersection lies in an earlier voxel.
+                    if (t_flake < t_enter)
                         continue;
 
-                    // Reject this flake if its intersection with the ray is outside the voxel.
-                    const asf::Vector3d flake_hit = ray.point_at(t_flake);
-                    if (!leaf_aabb.contains(flake_hit))
+                    // Reject this flake if it's beyond the closest intersection found so far.
+                    if (t_flake >= m_result.m_distance)
                         continue;
 
                     // Build a randomly oriented tangent frame around the flake's normal vector.
@@ -924,6 +919,7 @@ namespace
                     const asf::Vector3d flake_tangent_v = asf::cross(flake_tangent_u, flake_normal);//asf::rotate(q, flake_basis.get_tangent_v());
 
                     // Compute UV coordinates of the hit point on the flake.
+                    const asf::Vector3d flake_hit = ray.point_at(t_flake);
                     const asf::Vector3d center_to_hit = flake_hit - flake_center;
                     const float u = static_cast<float>(asf::dot(center_to_hit, flake_tangent_u));
                     const float v = static_cast<float>(asf::dot(center_to_hit, flake_tangent_v));
@@ -943,7 +939,7 @@ namespace
                     m_result.m_material_slot = 0;
                 }
 
-                return m_result.m_hit;
+                return m_result.m_distance < t_enter;
             }
 
           private:
@@ -1082,7 +1078,7 @@ namespace
                     .insert("label", "Base Object Instance")
                     .insert("type", "entity")
                     .insert("entity_types",
-                        asf::Dictionary().insert("object_insgtance", "Object Instances"))
+                        asf::Dictionary().insert("object_instance", "Object Instances"))
                     .insert("use", "required"));
 
             metadata.push_back(
