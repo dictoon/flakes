@@ -623,7 +623,7 @@ namespace
     };
 }
 
-void FlakesMaxObject::BuildMesh(TimeValue t)
+void FlakesMaxObject::BuildMesh(TimeValue time)
 {
     ivalid = FOREVER;
 
@@ -672,6 +672,11 @@ namespace
 
         return false;
     }
+}
+
+int FlakesMaxObject::get_flags() const
+{
+    return IgnoreTransform;
 }
 
 asf::auto_release_ptr<asr::Object> FlakesMaxObject::create_object(

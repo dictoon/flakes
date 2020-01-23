@@ -101,9 +101,10 @@ class FlakesMaxObject
     const MCHAR* GetObjectName() override;
 
     // SimpleObject2 methods.
-    void BuildMesh(TimeValue t) override;
+    void BuildMesh(TimeValue time) override;
 
     // IAppleseedGeometricObject methods.
+    int get_flags() const override;
     foundation::auto_release_ptr<renderer::Object> create_object(
         renderer::Project&  project,
         renderer::Assembly& assembly,
